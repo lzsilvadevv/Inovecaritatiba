@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InoveCar - Estética Automotiva de Alta Performance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,800;0,900;1,900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red-neon: #ff0000;
+            --dark-red: #8b0000;
+            --black-bg: #030303;
+            --black-surface: #0a0a0a;
+            --white-text: #ffffff;
+            --gray-text: #aaaaaa;
+            --gold-accent: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            color: var(--white-text);
+            overflow-x: hidden;
+            cursor: none; 
+        }
+
+        #cursor-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.2) 0%, transparent 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: width 0.2s, height 0.2s;
+        }
+
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #000; border-left: 1px solid #222; }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, var(--dark-red), var(--red-neon)); 
+            border-radius: 6px; 
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; text-transform: uppercase; }
+        .text-neon {
+            color: #fff;
+            text-shadow: 0 0 2px #fff, 0 0 10px var(--red-neon), 0 0 20px var(--red-neon), 0 0 40px var(--red-neon), 0 0 80px var(--dark-red);
+        }
+        .text-gradient {
+            background: linear-gradient(90deg, #fff, var(--red-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 10px rgba(255,0,0,0.3);
+        }
+
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 2px solid rgba(255,0,0,0.3);
+            box-shadow: 0 5px 20px rgba(255,0,0,0.15);
+        }
+        header img { height: 60px; filter: drop-shadow(0 0 10px rgba(255,0,0,0.8)); transition: transform 0.3s; }
+        header img:hover { transform: scale(1.05); }
+        nav ul { display: flex; list-style: none; gap: 30px; }
+        nav a {
+            color: #fff; text-decoration: none; font-weight: 600; font-size: 14px;
+            text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s;
+            position: relative;
+        }
+        nav a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px;
+            background: var(--red-neon); transition: width 0.3s; box-shadow: 0 0 10px var(--red-neon);
+        }
+        nav a:hover::after { width: 100%; }
+        nav a:hover { color: var(--red-neon); text-shadow: 0 0 10px var(--red-neon); }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(30,0,0,0.8) 0%, var(--black-bg) 80%);
+            padding: 0 20px;
+        }
+        .hero-content { z-index: 1; transform: perspective(1000px); }
+        .hero h1 {
+            font-size: 4.5rem; font-weight: 900; margin-bottom: 20px;
+            animation: float 4s ease-in-out infinite;
+        }
+        .hero p {
+            font-size: 1.3rem; margin-bottom: 40px; color: #ddd;
+            max-width: 700px; margin-left: auto; margin-right: auto;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+        }
+
+        .btn-neon {
+            display: inline-block;
+            padding: 20px 45px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(139,0,0,0.4));
+            border: 2px solid var(--red-neon);
+            border-radius: 8px;
+            text-decoration: none;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px var(--red-neon), inset 0 0 15px rgba(255,0,0,0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transform-style: preserve-3d;
+            letter-spacing: 1px;
+        }
+        .btn-neon::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-25deg); transition: 0.5s; z-index: -1;
+        }
+        .btn-neon:hover::before { left: 150%; }
+        .btn-neon:hover {
+            background: var(--red-neon);
+            box-shadow: 0 0 30px var(--red-neon), 0 0 60px var(--red-neon), inset 0 0 20px rgba(0,0,0,0.5);
+            transform: scale(1.1) translateZ(30px);
+            cursor: pointer;
+            border-color: #fff;
+        }
+
+        section { padding: 120px 10vw; position: relative; z-index: 1; }
+        section::before {
+            content: ''; position: absolute; top: 0; left: 5%; width: 90%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,0,0,0.3), transparent);
+        }
+        .section-title {
+            font-size: 3rem; text-align: center; margin-bottom: 70px;
+            font-weight: 900; position: relative;
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.8);
+        }
+        .section-title::after {
+            content: ''; display: block; width: 120px; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--red-neon), transparent);
+            margin: 20px auto 0;
+            box-shadow: 0 0 15px var(--red-neon);
+            border-radius: 5px;
+        }
+
+        .about-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+        }
+        .about-text h3 { font-size: 2.2rem; margin-bottom: 25px; color: var(--red-neon); text-shadow: 0 0 10px rgba(255,0,0,0.4); }
+        .about-text p { 
+            font-size: 1.15rem; line-height: 1.9; color: #ccc; margin-bottom: 20px;
+            background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px; border-left: 3px solid #333;
+        }
+        .highlight-text { color: #fff; font-weight: bold; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        
+        .badges { display: flex; flex-direction: column; gap: 20px; margin-top: 30px; }
+        .badge {
+            background: linear-gradient(145deg, #151515, #080808);
+            background-image: url('https://www.transparenttextures.com/patterns/black-mamba.png');
+            padding: 25px; border-radius: 15px;
+            border-left: 5px solid var(--red-neon);
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.9), inset 2px 2px 5px rgba(255,255,255,0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .badge:hover { transform: translateX(10px) scale(1.02); border-color: #fff; box-shadow: 15px 15px 40px rgba(255,0,0,0.2); }
+        .badge h4 { font-size: 1.6rem; color: #fff; margin-bottom: 10px; }
+        
+        /* CORREÇÃO DO CERTIFICADO: Altura ajustada para não cortar a foto */
+        .certificado-box {
+            margin-top: 20px;
+            border: 2px dashed rgba(255,0,0,0.5);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(0,0,0,0.6);
+            transition: 0.3s;
+        }
+        .certificado-box:hover { border-color: var(--red-neon); box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+        .certificado-box img {
+            width: 100%;
+            height: auto; /* Deixa a imagem calcular a própria altura */
+            max-height: 630px; /* Limite de segurança pra não ficar gigante no celular */
+            object-fit: cover;
+            border-radius: 5px;
+            filter: grayscale(20%);
+            transition: 0.4s;
+        }
+        .certificado-box:hover img { filter: grayscale(0%); transform: scale(1.02); }
+
+        .services-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 35px;
+            perspective: 1200px;
+        }
+        .service-card {
+            background: linear-gradient(160deg, #1a1a1a, #050505);
+            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            padding: 45px 25px;
+            text-align: center;
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.5);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s, border-color 0.4s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .service-card::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 20px; box-shadow: inset 0 0 20px rgba(255,0,0,0); transition: 0.6s; pointer-events: none;
+        }
+        .service-card:hover {
+            transform: rotateX(15deg) rotateY(-15deg) scale(1.08);
+            border-color: var(--red-neon);
+            box-shadow: -15px 15px 40px rgba(255, 0, 0, 0.3);
+            z-index: 10;
+        }
+        .service-card:hover::after { box-shadow: inset 0 0 20px rgba(255,0,0,0.2); }
+        .service-icon { 
+            font-size: 3.5rem; margin-bottom: 25px; 
+            transform: translateZ(40px); 
+            text-shadow: 0 10px 20px rgba(0,0,0,0.8);
+            display: inline-block;
+        }
+        .service-card h4 { 
+            font-size: 1.3rem; transform: translateZ(30px); color: #fff; letter-spacing: 1px;
+            text-shadow: 0 5px 10px rgba(0,0,0,0.5);
+        }
+
+        .reviews-container {
+            display: flex; gap: 30px; overflow-x: auto; padding: 20px 0 40px 0;
+            scroll-snap-type: x mandatory;
+        }
+        .review-card {
+            min-width: 350px;
+            background: linear-gradient(135deg, #111, #000);
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            padding: 40px; border-radius: 20px;
+            border-top: 3px solid var(--red-neon);
+            scroll-snap-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+            position: relative;
+            transition: 0.4s;
+        }
+        .review-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(255,0,0,0.15); border-color: #fff; }
+        .review-card::before {
+            content: '“'; position: absolute; top: -10px; right: 20px;
+            font-size: 5rem; color: rgba(255,0,0,0.1); font-family: 'Montserrat', sans-serif;
+            font-weight: 900; line-height: 1;
+        }
+        .review-card p { font-style: italic; color: #bbb; font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px; position: relative; z-index: 2; }
+        .review-author { font-weight: 900; color: var(--red-neon); font-family: 'Montserrat'; font-size: 1.1rem; text-transform: uppercase; }
+        .stars { color: var(--gold-accent); margin-bottom: 15px; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+
+        /* CORREÇÃO DA GALERIA: Mosaico Inteligente */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+            grid-auto-flow: dense; /* Ajuda as fotos pequenas a preencherem os espaços vazios perfeitamente */
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.9);
+            border: 2px solid #222;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: #000;
+            height: 300px; /* Altura para celular */
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            display: block;
+            opacity: 0.8;
+        }
+        .gallery-item::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(255,0,0,0.6) 0%, transparent 50%);
+            opacity: 0; transition: 0.5s; pointer-events: none;
+        }
+        .gallery-item:hover {
+            border-color: var(--red-neon);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+            transform: scale(1.02);
+            z-index: 5;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        .gallery-item:hover::after { opacity: 1; }
+
+        /* Configuração de tamanhos das fotos no Computador */
+@media (min-width: 700px) {
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* Cria 3 colunas iguais */
+        gap: 20px; /* Espaço entre as fotos */
+    }
+
+    .gallery-item {
+        width: 100%;
+        aspect-ratio: 1 / 1; /* Isso força a caixa a ser um quadrado perfeito! */
+        overflow: hidden; /* Esconde qualquer sobra */
+        border-radius: 10px; /* Deixa a borda arredondada */
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* ESTE É O SEGREDO: Ele dá zoom na foto para preencher o quadrado sem esticar! */
+    }
+}
+
+        .contact-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 50px;
+            background: linear-gradient(135deg, #111, #050505);
+            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            padding: 60px; border-radius: 25px;
+            border: 1px solid rgba(255,0,0,0.3);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+        }
+        .contact-info h3 { margin-bottom: 25px; color: var(--red-neon); font-size: 1.5rem; }
+        .contact-info p, .contact-info ul { color: #ccc; margin-bottom: 20px; font-size: 1.1rem; list-style: none; line-height: 1.6; }
+        .contact-info li { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .map-container { border-radius: 15px; overflow: hidden; border: 2px solid #222; box-shadow: inset 0 0 20px rgba(0,0,0,1); }
+        .map-container iframe {
+            width: 100%; height: 100%; min-height: 350px; border: none; 
+            filter: invert(100%) hue-rotate(180deg) contrast(120%) saturate(150%);
+            transition: 0.5s;
+        }
+        .map-container:hover iframe { filter: invert(90%) hue-rotate(180deg) contrast(100%) saturate(100%); }
+
+        footer {
+            text-align: center; padding: 40px; background: #000;
+            border-top: 2px solid rgba(255,0,0,0.2); margin-top: 50px;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        }
+        footer img { height: 50px; margin-bottom: 15px; filter: grayscale(100%) opacity(1.0); transition: 0.4s; }
+        footer:hover img { filter: grayscale(0%) opacity(1) drop-shadow(0 0 10px rgba(255,0,0,0.5)); }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-20px) rotateX(5deg); }
+            100% { transform: translateY(0px) rotateX(0deg); }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .section-title { font-size: 2.2rem; }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; padding: 30px; }
+            header { flex-direction: column; gap: 15px; padding: 15px; background: rgba(5,5,5,0.95); }
+            nav ul { gap: 15px; flex-wrap: wrap; justify-content: center; }
+            #cursor-glow { display: none; }
+            body { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-glow"></div>
+
+    <header>
+        <img src="img/logo inovecar.png" alt="InoveCar Logo">
+        <nav>
+            <ul>
+                <li><a href="#sobre">Sobre Nós</a></li>
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="#avaliacoes">Avaliações</a></li>
+                <li><a href="#galeria">Galeria</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="text-neon">Estética Automotiva de Verdade</h1>
+            <p>Elevamos o nível do seu veículo com tecnologias avançadas e cuidado extremo. O limite entre uma máquina e uma obra de arte.</p>
+            <a href="https://wa.me/5511972363472?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20um%20hor%C3%A1rio%20na%20InoveCar!" target="_blank" class="btn-neon">
+                Agende Seu Horário
+            </a>
+        </div>
+    </section>
+
+    <section id="sobre">
+        <h2 class="section-title">Nossa <span class="text-gradient">História</span></h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <h3>Excelência e Paixão por Carros</h3>
+                <p>O carro sai perfeito, feito com muito carinho. O proprietário Vitor e sua equipe formam a melhor estética de Itatiba. Somos reconhecidos pela dedicação caprichosa e altíssima qualidade em cada detalhe.</p>
+                <p>Nossa missão é transformar e proteger seu veículo, garantindo um serviço espetacular com preço justo. Somos membros orgulhosos da <span class="highlight-text">IDA (International Detailing Association)</span>, figurando entre os melhores detailers, possuindo certificação internacional e o selo oficial de excelência estampado em nosso uniforme.</p>
+                
+                <div class="badges">
+                    <div class="badge">
+                        <h4>+14 Anos</h4>
+                        <p>De Experiência no Ramo Automotivo</p>
+                    </div>
+                    <div class="badge">
+                        <h4>🏆 Top 1</h4>
+                        <p>Destaque Empresarial (2020 - 2026)</p>
+                        
+                        <!-- ÁREA DA FOTO COM O CERTIFICADO CORRIGIDA -->
+                        <div class="certificado-box">
+                            <img src="img/foto com certificado.jpeg" alt="Vitor com Certificado Destaque Empresarial">
+                            <p style="font-size: 25px; color: #fff; margin-top: 10px; padding: 0; background: none; border: none; font-weight: bold;">Certificação de Excelência</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div style="perspective: 1000px; text-align: center;">
+                <img src="img/logo sem fundo.png" style="width: 85%; transform: rotateY(-15deg) rotateX(10deg); filter: drop-shadow(20px 20px 40px rgba(255,0,0,0.6)); animation: float 5s infinite alternate ease-in-out;" alt="Logo 3D">
+            </div>
+        </div>
+    </section>
+
+    <section id="servicos">
+        <h2 class="section-title">Nossos <span class="text-gradient">Serviços</span></h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🏆</div>
+                <h4>PPF</h4>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🌟</div>
+                <h4>Vitrificação</h4>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">★</div>
+                <h4>Envelopamento</h4>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔥</div>
+                <h4>Insulfilm</h4>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🚗</div>
+                <h4>Polimento</h4>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🧤</div>
+                <h4>Higienização</h4>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🧼</div>
+                <h4>Lavagem Especial</h4>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔨</div>
+                <h4>Martelinho de Ouro</h4>
+            </div>
+        </div>
+    </section>
+
+    <section id="avaliacoes">
+        <h2 class="section-title">O Que Dizem <span class="text-gradient">Nossos Clientes</span></h2>
+        <div class="reviews-container">
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"Excelente trabalho! Conheço o proprietário desde a infância e posso dizer que ele sempre foi uma pessoa dedicada e caprichosa. A estética automotiva InoveCar oferece um serviço de altíssima qualidade... Meu carro ficou impecável!"</p>
+                <div class="review-author">- Dafny Silva</div>
+            </div>
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"O carro saiu perfeito, feito com muito carinho, super recomendo...Vitor e Equipe"</p>
+                <div class="review-author">- Diney Rodrigues</div>
+            </div>
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"Serviço Espetacular. Ótimo atendimento. Preço justo. Super satisfeito!!"</p>
+                <div class="review-author">- Cesar Flaibam</div>
+            </div>
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"O Vitor proprietário é muito atencioso, caprichoso e deixou meu carro impecável. A melhor estética de Itatiba!!!"</p>
+                <div class="review-author">- Thiago Bredariol</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria">
+        <h2 class="section-title">Nossos <span class="text-gradient">Trabalhos</span></h2>
+        <p style="text-align: center; color: #aaa; margin-bottom: 40px; font-size: 1.2rem;">Confira o resultado impressionante da nossa limpeza e detalhamento em veículos reais.</p>
+        
+        <div class="gallery-grid">
+            <!-- FOTO 1 - Vai ficar grandona na tela toda -->
+            <div class="gallery-item">
+                <img src="img/carro pronto1.jpeg" alt="Trabalho InoveCar 1">
+            </div>
+            
+            <!-- FOTO 2 - Vai ficar larga acompanhando a primeira -->
+            <div class="gallery-item">
+                <img src="img/carro pronto2.jpeg" alt="Trabalho InoveCar 2">
+            </div>
+            
+            <!-- FOTO 3 - O Fusca agora vai ficar no tamanho quadradinho (menor) -->
+            <div class="gallery-item">
+                <img src="img/carro pronto3.jpeg" alt="Trabalho InoveCar 3">
+            </div>
+            
+            <!-- FOTO 4 -->
+            <div class="gallery-item">
+                <img src="img/carro polimento.jpeg" alt="Trabalho InoveCar 4">
+            </div>
+            
+            <!-- FOTO 5 -->
+            <div class="gallery-item">
+                <img src="img/martelinho de ouro.jpeg" alt="Trabalho InoveCar 5">
+            </div>
+        </div>
+    </section>
+
+    <section id="contato">
+        <h2 class="section-title">Onde Nos <span class="text-gradient">Encontrar</span></h2>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h3>📍 Endereço</h3>
+                <p>Av. Brasília, 339 - Jardim Ipe, Itatiba - SP, 13256-540</p>
+                
+                <h3 style="margin-top: 40px;">📞 Telefone / WhatsApp</h3>
+                <p>(11) 97236-3472</p>
+                
+                <h3 style="margin-top: 40px;">🕒 Horário de Funcionamento</h3>
+                <ul>
+                    <li><strong>Segunda a Sexta:</strong> 08:00–18:00</li>
+                    <li><strong>Sábado:</strong> 08:00–12:00</li>
+                    <li><strong>Domingo:</strong> Fechado</li>
+                </ul>
+
+                <h3 style="margin-top: 40px;">💳 Formas de Pagamento</h3>
+                <p>Cartões de Crédito, Cartão de Débito, Pagamento por aproximação (NFC) e PIX.</p>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3667.653066914619!2d-46.8524456!3d-23.003468!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf2bb72b64a2cd%3A0xc68297b69b0c2a26!2sAv.%20Bras%C3%ADlia%2C%20339%20-%20Jardim%20Ipe%2C%20Itatiba%20-%20SP%2C%2013256-540!5e0!3m2!1spt-BR!2sbr!4v1689254000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <img src="img/logo inovecar.png" alt="InoveCar Logo Footer">
+        <p>&copy; 2026 InoveCar Estética Automotiva. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const cursor = document.getElementById('cursor-glow');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            cursor.style.left = e.touches[0].clientX + 'px';
+            cursor.style.top = e.touches[0].clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.style.width = '600px';
+            cursor.style.height = '600px';
+            cursor.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0.35) 0%, transparent 60%)';
+        });
+        document.addEventListener('mouseup', () => {
+            cursor.style.width = '400px';
+            cursor.style.height = '400px';
+            cursor.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0.2) 0%, transparent 60%)';
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach((section) => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(60px)';
+            section.style.transition = 'all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
